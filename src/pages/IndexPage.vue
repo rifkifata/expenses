@@ -1,118 +1,90 @@
 <template>
   <div class="window-height">
-    <q-carousel
-      v-model="slide"
-      swipeable
-      animated
-      :control-type="controlType"
-      control-color="purple"
-      navigation
-      arrows
-      class="window-height"
-    >
-      <q-carousel-slide name="style" class="column no-wrap flex-center">
-        <q-banner rounded class="bg-purple-8 text-white full-width q-mb-sm">
-          Mon, 28 Oktober 2022
-        </q-banner>
-        <q-markup-table :separator="separator" flat bordered class="no-margin full-height full-width">
-          <thead>
-            <tr>
-              <th class="text-left">Product</th>
-              <th class="text-right">Tags</th>
-              <th class="text-right">Debit/Kredit</th>
-              <th class="text-right">Harga</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="text-left">Frozen Yogurt</td>
-              <td class="text-right">Primary</td>
-              <td class="text-right">D</td>
-              <td class="text-right">24.000</td>
-            </tr>
-            <tr>
-              <td class="text-left">Frozen Yogurt</td>
-              <td class="text-right">Primary</td>
-              <td class="text-right">D</td>
-              <td class="text-right">24.000</td>
-            </tr>
-            <tr>
-              <td class="text-left">Frozen Yogurt</td>
-              <td class="text-right">Primary</td>
-              <td class="text-right">D</td>
-              <td class="text-right">24.000</td>
-            </tr>
-                            <tr>
-              <td class="text-left">Frozen Yogurt</td>
-              <td class="text-right">Primary</td>
-              <td class="text-right">D</td>
-              <td class="text-right">24.000</td>
-            </tr>
-            <tr>
-              <td class="text-left">Frozen Yogurt</td>
-              <td class="text-right">Primary</td>
-              <td class="text-right">D</td>
-              <td class="text-right">24.000</td>
-            </tr>
-                            <tr>
-              <td class="text-left">Frozen Yogurt</td>
-              <td class="text-right">Primary</td>
-              <td class="text-right">D</td>
-              <td class="text-right">24.000</td>
-            </tr>
-            <tr>
-              <td class="text-left">Frozen Yogurt</td>
-              <td class="text-right">Primary</td>
-              <td class="text-right">D</td>
-              <td class="text-right">24.000</td>
-            </tr>
-
-          </tbody>
-        </q-markup-table>
-      </q-carousel-slide>
-      <q-carousel-slide name="tv" class="column no-wrap flex-center">
-        <q-icon name="live_tv" size="56px" />
-        <div class="q-mt-md text-center text-black">
-          {{ lorem }}
-        </div>
-      </q-carousel-slide>
-      <q-carousel-slide name="layers" class="column no-wrap flex-center">
-        <q-icon name="layers" size="56px" />
-        <div class="q-mt-md text-center text-black">
-          {{ lorem }}
-        </div>
-      </q-carousel-slide>
-      <q-carousel-slide name="map" class="column no-wrap flex-center">
-        <q-icon name="terrain" size="56px" />
-        <div class="q-mt-md text-center text-black">
-          {{ lorem }}
-        </div>
-      </q-carousel-slide>
-    </q-carousel>
+    <q-table
+      title="Treats"
+      :rows="posts"
+      :columns="columns"
+      row-key="id"
+      dark
+      color="amber"
+      class="col"
+    />
   </div>
 </template>
 
 <script>
 // carousel
 import { ref } from 'vue'
-
+//
+import { expenses } from '../repository/database'
 export default {
-  setup () {
+  name: 'PageIndex',
+  data () {
     return {
-      // carousel
-      controlType: ref('outline'),
-      controlTypeOptions: [
-        { value: 'regular', label: 'regular' },
-        { value: 'unelevated', label: 'unelevated' },
-        { value: 'flat', label: 'flat (default)' },
-        { value: 'outline', label: 'outline' },
-        { value: 'push', label: 'push' }
-      ],
+      columns: [
+        {
+          name: 'name',
+          label: 'Name',
+          field: 'name',
+          align: 'left',
+          sortable: true
+        },
+        {
+          name: 'category',
+          label: 'Category',
+          field: 'category',
+          align: 'right',
+          sortable: true
+        },
+        {
+          name: 'type',
+          label: 'Debit/Kredit',
+          field: 'type',
+          align: 'right',
+          sortable: true
+        },
+        {
+          name: 'price',
+          label: 'Price',
+          field: 'price',
+          align: 'right',
+          sortable: true
+        }
 
-      slide: ref('style'),
-      lorem: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque voluptatem totam, architecto cupiditate officia rerum, error dignissimos praesentium libero ab nemo.',
+      ],
+      posts: []
+      // carousel
+      // controlType: ref('outline'),
+      // controlTypeOptions: [
+      //   { value: 'regular', label: 'regular' },
+      //   { value: 'unelevated', label: 'unelevated' },
+      //   { value: 'flat', label: 'flat (default)' },
+      //   { value: 'outline', label: 'outline' },
+      //   { value: 'push', label: 'push' }
+      // ],
+
+      // slide: ref('style'),
+      // lorem: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque voluptatem totam, architecto cupiditate officia rerum, error dignissimos praesentium libero ab nemo.',
       // Table
-      separator: ref('none')
+      // separator: ref('none')
+    }
+  },
+  mounted () {
+    this.getPosts()
+  },
+  methods: {
+    getPosts () {
+      // this.$axios.get('https://jsonplaceholder.typicode.com/posts')
+      this.$axios.get('https://api.jsonbin.io/v3/b/6347ed932b3499323bdd1e82')
+      // this.$axios.get('./pages/database.json')
+        .then((res) => {
+          // console.log(res)
+          this.posts = res.data.record
+          // console.log(res.data.record)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     }
   }
 }
