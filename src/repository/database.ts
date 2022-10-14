@@ -1,4 +1,5 @@
-export const expenses = [
+export const expenses =
+[
   {
     trx_id: '1',
     name: 'Makan Siang',
