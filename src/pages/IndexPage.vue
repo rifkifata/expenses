@@ -10,7 +10,11 @@
           class="col"
         />
         <q-btn @click.stop="getPosts()" color="red" icon="mail" icon-right="send" label="On Left and Right"/>
-  </div>
+        <div id="date" style="height:100px; width:300px;">
+        </div>
+        <button id="prev">prev</button>
+            <button id="next">next</button>
+          </div>
 </template>
 
 <script>
@@ -52,7 +56,8 @@ export default {
         }
 
       ],
-      posts: []
+      posts: [],
+      date: "",
       // carousel
       // controlType: ref('outline'),
       // controlTypeOptions: [
@@ -73,7 +78,7 @@ export default {
     this.getPosts()
   },
   mounted () {
-    this.getPosts()
+    this.getDate()
   },
   methods: {
     getPosts () {
@@ -131,7 +136,38 @@ export default {
         .catch((err) => {
           console.log(err)
         })
-    }
+    },
+    getDate() {
+      if (!Date.now) {
+        Date.now = function() {
+          return new Date().getTime();
+        }
+      }
+      var theDate = Date.now();
+
+      document.getElementById('date').innerText = getTheDate(theDate)
+
+      document.getElementById('prev').addEventListener("click", function() {
+        theDate -= 86400000;
+        document.getElementById('date').innerText = getTheDate(theDate)
+      })
+      document.getElementById('next').addEventListener("click", function() {
+        theDate += 86400000;
+        document.getElementById('date').innerText = getTheDate(theDate)
+      })
+
+      function getTheDate(getDate) {
+        var days = ["Sunday", "Monday", "Tuesday",
+          "Wednesday", "Thursday", "Friday", "Saturday"
+        ];
+        var months = ["January", "February", "March",
+          "April", "May", "June", "July", "August",
+          "September", "October", "November", "December"
+        ];
+        var theCDate = new Date(getDate);
+        return days[theCDate.getDay()] + ', ' + theCDate.getDate() + '-' + months[theCDate.getMonth()] + '-' + theCDate.getFullYear();
+      }
+    },
     //  filterByDate (arr, theDate) {
     //         const filtering = (theDate) => arr.filter(({ updated_date }) => updated_date === theDate)
     //         //console.log(filterByDate(theDate));
