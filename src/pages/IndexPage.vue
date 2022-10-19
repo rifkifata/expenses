@@ -180,6 +180,7 @@ export default {
     // get ketika tekan left () date +1 dari yang sekarang
 
     //todo : BIKIN BISA NEXT DI CARAOUSEL
+    //todo : ubahdata itu (put) harus get dlu semuanya -> kirim ke function -> ubah data -> returned data ori + udah d ubah
   }
 }
 </script>
