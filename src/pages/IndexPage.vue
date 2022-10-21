@@ -1,7 +1,7 @@
 <template>
   <div class="window-height">
     <q-table
-          title="Treats"
+          :title="title"
           :rows="posts"
           :columns="columns"
           row-key="id"
@@ -9,7 +9,50 @@
           color="amber"
           class="col"
         />
-        <q-btn @click.stop="getPosts()" color="red" icon="mail" icon-right="send" label="On Left and Right"/>
+
+    <q-table
+      title="Treats"
+      :rows="posts"
+      :columns="columns"
+      row-key="id"
+      binary-state-sort
+    >
+      <template v-slot:body="props">
+        <q-tr :props="props">
+          <q-td key="name" :props="props">
+            {{ props.row.name }}
+            <q-popup-edit v-model="props.row.name" v-slot="scope">
+              <q-input v-model="scope.value" dense autofocus counter />
+            </q-popup-edit>
+          </q-td>
+          <q-td key="calories" :props="props">
+            {{ props.row.calories }}
+            <q-popup-edit v-model="props.row.calories" title="Update calories" buttons v-slot="scope">
+              <q-input type="number" v-model="scope.value" dense autofocus />
+            </q-popup-edit>
+          </q-td>
+          <q-td key="fat" :props="props">
+            <div class="text-pre-wrap">{{ props.row.fat }}</div>
+            <q-popup-edit v-model="props.row.fat" v-slot="scope">
+              <q-input type="textarea" v-model="scope.value" dense autofocus />
+            </q-popup-edit>
+          </q-td>
+          <q-td key="carbs" :props="props">
+            {{ props.row.carbs }}
+            <q-popup-edit v-model="props.row.carbs" title="Update carbs" buttons persistent v-slot="scope">
+              <q-input type="number" v-model="scope.value" dense autofocus hint="Use buttons to close" />
+            </q-popup-edit>
+          </q-td>
+          <q-td key="protein" :props="props">{{ props.row.protein }}</q-td>
+          <q-td key="sodium" :props="props">{{ props.row.sodium }}</q-td>
+          <q-td key="calcium" :props="props">{{ props.row.calcium }}</q-td>
+          <q-td key="iron" :props="props">{{ props.row.iron }}</q-td>
+        </q-tr>
+      </template>
+    </q-table>
+
+        <q-btn @click.stop="prevPosts()" color="red" icon="mail" icon-right="send" label="Left"/>
+        <q-btn @click.stop="nextPosts()" color="red" icon="mail" icon-right="send" label="Right"/>
         <div id="date" style="height:100px; width:300px;">
         </div>
         <button id="prev">prev</button>
@@ -20,6 +63,18 @@
 <script>
 // carousel
 import { ref } from 'vue'
+let dateToday = new Date ()
+function getTheDate(getDate) {
+            var days = ["Sun", "Mon", "Tue",
+              "Wed", "Thu", "Fri", "Sat"
+            ];
+            var months = ["January", "February", "March",
+              "April", "May", "June", "July", "August",
+              "September", "October", "November", "December"
+            ];
+            var theCDate = new Date(getDate);
+            return days[theCDate.getDay()] + ', ' + theCDate.getDate() + ' ' + months[theCDate.getMonth()] + ' ' + theCDate.getFullYear();
+          }
 // import { expenses } from '../repository/database'
 export default {
   name: 'PageIndex',
@@ -58,6 +113,7 @@ export default {
       ],
       posts: [],
       date: "",
+      title: ""
       // carousel
       // controlType: ref('outline'),
       // controlTypeOptions: [
@@ -78,20 +134,19 @@ export default {
     this.getPosts()
   },
   mounted () {
-    this.getDate()
+    //this.getDate()
   },
   methods: {
     getPosts () {
       this.$axios.get('https://api.jsonbin.io/v3/b/6347ed932b3499323bdd1e82')
         .then((res) => {
           // let theDate = formatDate(new Date(new Date))
-          let today = new Date()
-          today.setHours(0,0,0,0)
-          today = today.toISOString()
+          dateToday.setHours(0,0,0,0)
+          let dateTodayISO = dateToday.toISOString()
 
+          this.title = getTheDate(dateToday)
           let arr = res.data.record
-          this.posts = arr.filter(({ date }) => date === today)
-          console.log(this.posts)
+          this.posts = arr.filter(({ date }) => date === dateTodayISO)
           // let date = new Date();
           // add a day
           // date.setDate(date.getDate() + -1);
@@ -131,43 +186,84 @@ export default {
     nextPosts () {
       this.$axios.get('https://api.jsonbin.io/v3/b/6347ed932b3499323bdd1e82')
         .then((res) => {
+          dateToday.setDate(dateToday.getDate() + 1)
+          dateToday.setHours(0,0,0,0)
+          let dateTodayISO = dateToday.toISOString()
 
-        })
+          this.title = getTheDate(dateToday)
+          console.log(this.title)
+
+          let arr = res.data.record
+          this.posts = arr.filter(({ date }) => date === dateTodayISO)
+
+          console.log(this.posts)})
         .catch((err) => {
           console.log(err)
         })
     },
-    getDate() {
-      if (!Date.now) {
-        Date.now = function() {
-          return new Date().getTime();
-        }
-      }
-      var theDate = Date.now();
+    prevPosts () {
+      this.$axios.get('https://api.jsonbin.io/v3/b/6347ed932b3499323bdd1e82')
+        .then((res) => {
+          dateToday.setDate(dateToday.getDate() - 1)
+          dateToday.setHours(0,0,0,0)
+          let dateTodayISO = dateToday.toISOString()
 
-      document.getElementById('date').innerText = getTheDate(theDate)
+          this.title = getTheDate(dateToday)
+          console.log(this.title)
 
-      document.getElementById('prev').addEventListener("click", function() {
-        theDate -= 86400000;
-        document.getElementById('date').innerText = getTheDate(theDate)
-      })
-      document.getElementById('next').addEventListener("click", function() {
-        theDate += 86400000;
-        document.getElementById('date').innerText = getTheDate(theDate)
-      })
+          let arr = res.data.record
+          this.posts = arr.filter(({ date }) => date === dateTodayISO)
 
-      function getTheDate(getDate) {
-        var days = ["Sunday", "Monday", "Tuesday",
-          "Wednesday", "Thursday", "Friday", "Saturday"
-        ];
-        var months = ["January", "February", "March",
-          "April", "May", "June", "July", "August",
-          "September", "October", "November", "December"
-        ];
-        var theCDate = new Date(getDate);
-        return days[theCDate.getDay()] + ', ' + theCDate.getDate() + '-' + months[theCDate.getMonth()] + '-' + theCDate.getFullYear();
-      }
+          console.log(this.posts)})
+        .catch((err) => {
+          console.log(err)
+        })
     },
+    // getDate() {
+    //   if (!Date.now) {
+    //     Date.now = function() {
+    //       return new Date().getTime();
+    //     }
+    //   }
+    //   var theDate = Date.now();
+
+    //   document.getElementById('date').innerText = getTheDate(theDate)
+
+    //   //hit prev
+    //   document.getElementById('prev').addEventListener("click", function() {
+    //     theDate -= 86400000;
+    //     document.getElementById('date').innerText = getTheDate(theDate)
+
+    //   })
+    //   //hit next
+    //   document.getElementById('next').addEventListener("click", function() {
+    //     theDate += 86400000;
+    //     document.getElementById('date').innerText = getTheDate(theDate)
+    //     //getdata
+    //     getDataByDate('2022-10-20T17:00:00.000Z')
+    //   })
+
+
+
+    //   // get for the nextday
+    //   function getDataByDate(tanggalTemp){
+    //     this.$axios.get('https://api.jsonbin.io/v3/b/6347ed932b3499323bdd1e82')
+    //     .then((res) => {
+    //       // let theDate = formatDate(new Date(new Date))
+    //       let tanggal = new Date(tanggalTemp)
+    //       tanggal.setHours(0,0,0,0)
+    //       tanggal = tanggal.toISOString()
+
+    //       let arr = res.data.record
+    //       this.posts = arr.filter(({ date }) => date === tanggal)
+
+    //       console.log(this.posts)})
+    //     .catch((err) => {
+    //       console.log(err)
+    //     })
+    //   }
+
+    // },
     //  filterByDate (arr, theDate) {
     //         const filtering = (theDate) => arr.filter(({ updated_date }) => updated_date === theDate)
     //         //console.log(filterByDate(theDate));
@@ -179,8 +275,8 @@ export default {
     // dan gausah pake titik bawah itu
     // get ketika tekan left () date +1 dari yang sekarang
 
-    //todo : BIKIN BISA NEXT DI CARAOUSEL
-    //todo : ubahdata itu (put) harus get dlu semuanya -> kirim ke function -> ubah data -> returned data ori + udah d ubah
+    // todo : BIKIN BISA NEXT DI CARAOUSEL
+    // todo : ubahdata itu (put) harus get dlu semuanya -> kirim ke function -> ubah data -> returned data ori + udah d ubah
   }
 }
 </script>
