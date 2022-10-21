@@ -60,7 +60,7 @@
           </div>
 </template>
 
-<script>
+<script lang="ts">
 // carousel
 import { ref } from 'vue'
 let dateToday = new Date ()
