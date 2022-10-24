@@ -8,9 +8,6 @@
       dark
       binary-state-sort
     >
-     <template v-slot:top-right>
-        <text-body1>Rp. 24.0000</text-body1>
-      </template>
       <template v-slot:body="props">
         <q-tr :props="props">
           <q-td key="name" :props="props">
@@ -41,11 +38,16 @@
       </template>
     </q-table>
 
+    <q-dialog v-model="persistent" persistent transition-show="scale" transition-hide="scale">
+          <q-card class="bg-teal text-white" style="width: 120px" align="center">
+              <q-btn flat label="SUCCEEDED" v-close-popup/>
+          </q-card>
+        </q-dialog>
+
         <q-btn @click.stop="nextPrevPosts(-1)" color="red" icon="mail" icon-right="send" label="Left"/>
         <q-btn @click.stop="nextPrevPosts(1)" color="red" icon="mail" icon-right="send" label="Right"/>
         <q-btn @click.stop="sendUpdateData()" color="red" icon="mail" icon-right="send" label="Send"/>
         <q-btn @click.stop="newRow()" color="red" icon="mail" icon-right="send" label="New Row"/>
-        <q-btn @click.stop="getPosts()" color="red" icon="mail" icon-right="send" label="New Row"/>
 
         <div id="date" style="height:100px; width:300px;">
         </div>
@@ -130,7 +132,8 @@ export default {
       date: "",
       title: "",
       puts: "",
-      data: []
+      data: [],
+      persistent: ref(false)
       // carousel
       // controlType: ref('outline'),
       // controlTypeOptions: [
@@ -188,6 +191,7 @@ export default {
       await this.getAllData()
       let arr = this.data
       this.posts = arr.filter(({ date }) => date === dateTodayISO)
+      this.date = this.sumToday(this.posts)
     },
     nextPrevPosts (n) {
         dateToday.setDate(dateToday.getDate() + n)
@@ -210,18 +214,13 @@ export default {
                 })
         this.data = arrOri
         await this.updateData(this.data)
+        this.persistent = true
     },
     async newRow () {
       let arrOri = await this.data
       let arrEdit = await this.posts
       //format Date
       let dateTodayISO = dateToday.toISOString()
-      const yyyy = dateToday.getFullYear()
-      let mm = dateToday.getMonth() + 1
-      let dd = dateToday.getDate()
-      if (dd < 10) dd = '0' + dd
-      if (mm < 10) mm = '0' + mm
-      const formattedToday = dd + '-' + mm + '-' + yyyy
 
       //grouping the trx_id
       const ids = arrOri.map(object => {
@@ -234,7 +233,7 @@ export default {
         "price": "",
         "date": dateTodayISO,
         "is_deleted": 0,
-        "created_date": formattedToday,
+        "created_date": this.formatDate(),
         "category": "Primary",
         "type": "Debit"
       }
@@ -245,78 +244,27 @@ export default {
       this.posts = arrEdit
     },
     formatDate () {
-
+      const yyyy = dateToday.getFullYear()
+      let mm = dateToday.getMonth() + 1
+      let dd = dateToday.getDate()
+      if (dd < 10) dd = '0' + dd
+      if (mm < 10) mm = '0' + mm
+      return dd + '-' + mm + '-' + yyyy
     },
     total() {
 
     },
-    sumToday() {
-
+    sumToday(arr) {
+      let totalPrice = arr.reduce((accum,item) => accum + parseInt(item.price), 0)
+      return totalPrice = totalPrice.toString()
     }
 
-
-    // getDate() {
-    //   if (!Date.now) {
-    //     Date.now = function() {
-    //       return new Date().getTime();
-    //     }
-    //   }
-    //   var theDate = Date.now();
-
-    //   document.getElementById('date').innerText = getTheDate(theDate)
-
-    //   //hit prev
-    //   document.getElementById('prev').addEventListener("click", function() {
-    //     theDate -= 86400000;
-    //     document.getElementById('date').innerText = getTheDate(theDate)
-
-    //   })
-    //   //hit next
-    //   document.getElementById('next').addEventListener("click", function() {
-    //     theDate += 86400000;
-    //     document.getElementById('date').innerText = getTheDate(theDate)
-    //     //getdata
-    //     getDataByDate('2022-10-20T17:00:00.000Z')
-    //   })
-
-
-
-    //   // get for the nextday
-    //   function getDataByDate(tanggalTemp){
-    //     this.$axios.get('https://api.jsonbin.io/v3/b/6347ed932b3499323bdd1e82')
-    //     .then((res) => {
-    //       // let theDate = formatDate(new Date(new Date))
-    //       let tanggal = new Date(tanggalTemp)
-    //       tanggal.setHours(0,0,0,0)
-    //       tanggal = tanggal.toISOString()
-
-    //       let arr = res.data.record
-    //       this.posts = arr.filter(({ date }) => date === tanggal)
-
-    //       console.log(this.posts)})
-    //     .catch((err) => {
-    //       console.log(err)
-    //     })
-    //   }
-
-    // },
-    //  filterByDate (arr, theDate) {
-    //         const filtering = (theDate) => arr.filter(({ updated_date }) => updated_date === theDate)
-    //         //console.log(filterByDate(theDate));
-    //         //let theDate = '04-08-1999'
-
-    //         return filtering
-    //     }
-    // get ketika tekan next () date -1 dari yang sekarang
-    // dan gausah pake titik bawah itu
-    // get ketika tekan left () date +1 dari yang sekarang
-
     // todo : BIKIN BISA NEXT DI CARAOUSEL
-    // todo : ubahdata itu (put) harus get dlu semuanya -> kirim ke function -> ubah data -> returned data ori + udah d ubah
-
     //HARUSNYA ADA FUNGSI BARU YANG DIJALANKAN UNTUK GET DATA FULL, TRS TAMPUNG KE VARIABLE GLOBAL
     //VARIABLE INILAH YANG HARUSNYA D OTAK ATIK NTUK EDIT/NEW ROW DLL, BUKANNYA MALAH GET AXIOS BARU.
     //TODO: Updated Date!
+    //TODO: TOTAL SUM / day!
+
   }
 }
 </script>
