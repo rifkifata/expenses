@@ -56,27 +56,27 @@
 
 <script lang="ts">
 
-// // Import the functions you need from the SDKs you need
-// import { initializeApp } from "firebase/app";
-// import { getAnalytics } from "firebase/analytics";
-// // TODO: Add SDKs for Firebase products that you want to use
-// // https://firebase.google.com/docs/web/setup#available-libraries
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
-// // Your web app's Firebase configuration
-// // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-// const firebaseConfig = {
-//   apiKey: "AIzaSyBRWZ5eeZ1YpgYTgVqEGpzAS6iTa3elDy0",
-//   authDomain: "expenses-bae47.firebaseapp.com",
-//   projectId: "expenses-bae47",
-//   storageBucket: "expenses-bae47.appspot.com",
-//   messagingSenderId: "585378571530",
-//   appId: "1:585378571530:web:ad17176556cd715e00c6f3",
-//   measurementId: "G-RCTN3S42W8"
-// };
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyBRWZ5eeZ1YpgYTgVqEGpzAS6iTa3elDy0",
+  authDomain: "expenses-bae47.firebaseapp.com",
+  projectId: "expenses-bae47",
+  storageBucket: "expenses-bae47.appspot.com",
+  messagingSenderId: "585378571530",
+  appId: "1:585378571530:web:3b6a6d83688e3f2000c6f3",
+  measurementId: "G-PPRPC8F4ZG"
+};
 
-// // Initialize Firebase
-// const app = initializeApp(firebaseConfig);
-// const analytics = getAnalytics(app);
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 
 // carousel
 import { ref } from 'vue'

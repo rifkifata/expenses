@@ -1,0 +1,14 @@
+{
+  "hosting": {
+    "site": "expenses-teuku",
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  },
+  "emulators": {
+    "singleProjectMode": true
+  }
+}
