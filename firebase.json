@@ -1,7 +1,7 @@
 {
   "hosting": {
     "site": "expenses-teuku",
-    "public": "public",
+    "public": "dist/spa",
     "ignore": [
       "firebase.json",
       "**/.*",
