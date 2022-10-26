@@ -6,7 +6,10 @@
       :columns="columns"
       row-key="id"
       dark
+      no-data-label="I didn't find anything for you"
+      no-results-label="The filter didn't uncover any results"
       binary-state-sort
+      :pagination.sync="pagination"
     >
       <template v-slot:body="props">
         <q-tr :props="props">
@@ -35,6 +38,14 @@
             </q-popup-edit>
           </q-td>
         </q-tr>
+      </template>
+      <template v-slot:no-data="{ icon, message, filter }">
+        <div class="full-width row flex-center text-negative q-gutter-sm">
+          <q-icon size="2em" name="sentiment_dissatisfied" />
+          <span>
+            Well this is sad... {{ message }}
+          </span>
+        </div>
       </template>
     </q-table>
 
@@ -133,7 +144,10 @@ export default {
       title: "",
       puts: "",
       data: [],
-      persistent: ref(false)
+      persistent: ref(false),
+       pagination: {
+        rowsPerPage: 0
+      },
       // carousel
       // controlType: ref('outline'),
       // controlTypeOptions: [
