@@ -1,12 +1,26 @@
 <template>
-  <div class="window-height">
+  <!-- q-card -->
+  <div class="q-pa-md row justify-center items-start q-gutter-md">
+    <q-card
+      class="my-card text-white"
+      style="background: radial-gradient(circle, #35a2ff 0%, #014a88 100%)"
+    >
+      <q-card-section>
+        <div class="text-h6 text-center">Hai, Kamu Apakabar?</div>
+        <div class="text-subtitle3 text-center">Semoga baik-baik saja, jangan seperti aku ya :D</div>
+        <div class="text-subtitle3 text-center">Laman ini dibuat atas dasar ketakutan hamba akan amnesia permanent.</div>
+      </q-card-section>
+    </q-card>
+  </div>
+  <!-- table -->
+  <div class="window-width">
     <q-table
       :title="title"
-      :rows="posts"
+      :rows="data"
       :columns="columns"
       row-key="key"
       dark
-      no-data-label="I didn't find anything for you"
+      no-data-label="Tunggu dikit"
       no-results-label="The filter didn't uncover any results"
       binary-state-sort
       :pagination.sync="pagination"
@@ -14,58 +28,87 @@
       <template v-slot:body="props">
         <q-tr :props="props">
           <q-td key="dr_name" :props="props">
-            {{ props.row.name }}
-            <q-popup-edit v-model="props.row.name" title="Update name" buttons v-slot="scope">
-              <q-input type="textarea" v-model="scope.value" dense autofocus/>
-            </q-popup-edit>
+            {{ props.row.dr_name }}
           </q-td>
           <q-td key="diagnose" :props="props">
-            {{ props.row.category }}
-            <q-popup-edit v-model="props.row.category" title="Update category" buttons v-slot="scope">
-              <q-input type="textarea" v-model="scope.value" dense autofocus />
-            </q-popup-edit>
+            {{ props.row.diagnose }}
           </q-td>
           <q-td key="medicine_name" :props="props">
-            <div class="text-pre-wrap">{{ props.row.type }}</div>
-            <q-popup-edit v-model="props.row.type" title="Update type" buttons v-slot="scope">
-               <q-input type="textarea" v-model="scope.value" dense autofocus />
-            </q-popup-edit>
+            <li v-for="(medicine_name, index) in props.row.medicine_name" :key="index">{{ medicine_name }}</li>
           </q-td>
           <q-td key="specialist" :props="props">
-            {{ props.row.price }}
-            <q-popup-edit v-model="props.row.price" title="Update price" buttons persistent v-slot="scope">
-              <q-input type="number" v-model="scope.value" dense autofocus hint="Use buttons to close" />
-            </q-popup-edit>
+            {{ props.row.specialist }}
           </q-td>
           <q-td key="tindakan" :props="props">
-            {{ props.row.price }}
-            <q-popup-edit v-model="props.row.price" title="Update price" buttons persistent v-slot="scope">
-              <q-input type="number" v-model="scope.value" dense autofocus hint="Use buttons to close" />
-            </q-popup-edit>
+            {{ props.row.tindakan }}
+          </q-td>
+          <q-td key="updatedAt" :props="props">
+            {{ props.row.updatedAt }}
+          </q-td>
+          <q-td key="hospital" :props="props">
+            {{ props.row.hospital }}
+          </q-td>
+          <q-td key="etc" :props="props">
+            {{ props.row.etc }}
           </q-td>
         </q-tr>
       </template>
-      <template v-slot:no-data="{ icon, message, filter }">
+      <template v-slot:no-data="{ icon, message }">
         <div class="full-width row flex-center text-negative q-gutter-sm">
           <q-icon size="2em" name="sentiment_dissatisfied" />
           <span>
-            Well this is sad... {{ message }}
+            Sabar napa,,,, {{ message }}
           </span>
         </div>
       </template>
     </q-table>
 
     <q-dialog v-model="persistent" persistent transition-show="scale" transition-hide="scale">
-          <q-card class="bg-teal text-white" style="width: 120px" align="center">
-              <q-btn flat label="SUCCEEDED" v-close-popup/>
-          </q-card>
-        </q-dialog>
+      <q-card class="bg-teal text-white" style="width: 120px" align="center">
+          <q-btn flat label="SUCCEEDED" v-close-popup/>
+      </q-card>
+    </q-dialog>
 
-        <div id="date" style="height:100px; width:300px;">
+  </div>
+<!-- q-card footer -->
+<div class="q-pa-md row justify-center items-start q-gutter-md">
+    <q-card
+      class="my-card text-white"
+      style="background: radial-gradient(circle, #35a2ff 0%, #014a88 100%)"
+    >
+      <q-card-section>
+        <div class="text-h6">{{titlefooter}}</div>
+        <div class="text-subtitle3">
+          <ul id="example-1">
+            <li v-for="item in gejala">
+              {{ item }}
+            </li>
+          </ul>
         </div>
-          </div>
-</template>
+        <div class="text-subtitle3">{{ story }}</div>
+      </q-card-section>
+    </q-card>
+  </div>
+<!-- popup -->
+<div class="q-pa-md q-gutter-sm">
+  <q-dialog v-model="prompt" persistent>
+      <q-card style="min-width: 350px">
+        <q-card-section>
+          <div class="text-h6" id="textJame">Hy, Kalo mau liat full, Kenalan dulu dong</div>
+        </q-card-section>
 
+        <q-card-section class="q-pt-none">
+          <q-input dense v-model="address" autofocus/>
+        </q-card-section>
+
+        <q-card-actions align="right" class="text-primary">
+          <q-btn flat label="Buka" v-close-popup :disabled="!address" @click="onSubmit(address)"/>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+</div>
+
+</template>
 <script lang="ts">
 
 // Import the functions you need from the SDKs you need
@@ -92,8 +135,9 @@ const analytics = getAnalytics(app);
 
 // carousel
 import { ref } from 'vue'
+import { stringToByteArray } from "@firebase/util";
 let dateToday = new Date ()
-function getTheDate(getDate) {
+function getTheDate(getDate: string | number | Date) {
             var days = ["Sun", "Mon", "Tue",
               "Wed", "Thu", "Fri", "Sat"
             ];
@@ -109,81 +153,125 @@ export default {
   name: 'PageIndex',
   data () {
     return {
+      address: "",
+      prompt: ref(true),
       columns: [
         {
           name: 'dr_name',
-          label: 'dr_name',
+          label: 'Nama Dokter',
           field: 'dr_name',
           align: 'left',
           sortable: true
         },
         {
           name: 'diagnose',
-          label: 'diagnose',
+          label: 'Diagnosa',
           field: 'diagnose',
-          align: 'right',
+          align: 'left',
           sortable: true
         },
         {
           name: 'medicine_name',
-          label: 'medicine_name',
+          label: 'Nama Obat',
           field: 'medicine_name',
-          align: 'right',
+          align: 'left',
           sortable: true
         },
         {
           name: 'specialist',
-          label: 'specialist',
+          label: 'Specialist',
           field: 'specialist',
-          align: 'right',
+          align: 'left',
           sortable: true
         },
         {
           name: 'tindakan',
-          label: 'tindakan',
+          label: 'Tindakan',
           field: 'tindakan',
-          align: 'right',
+          align: 'left',
+          sortable: true
+        },
+        {
+          name: 'updatedAt',
+          label: 'Waktu Kunjung',
+          field: 'Waktu Kunjung',
+          align: 'left',
+          sortable: true
+        },
+        {
+          name: 'hospital',
+          label: 'Hospital',
+          field: 'hospital',
+          align: 'left',
+          sortable: true
+        },
+        {
+          name: 'etc',
+          label: 'etc...',
+          field: 'etc',
+          align: 'left',
           sortable: true
         }
-
       ],
       posts: [],
       date: "",
-      title: "",
+      title: "Rekam Medik",
       puts: "",
       data: [],
       persistent: ref(false),
        pagination: {
         rowsPerPage: 0
-      }
+      },
+      titlefooter : "",
+      story:"",
+      gejala:""
     }
   },
   beforeMount () {
     this.getAllData()
   },
   mounted () {
-    this.getPosts()
+    this.getFooter()
   },
   created () {},
   methods: {
     //function connecting axios to API bin
-    async getAllData () {
-      await this.$axios.get('https://tan-colorful-snail.cyclic.app/getall/riwayat/')
-        .then((res) => {
-          this.data = res.data.results
+      async getAllData () {
+        await this.$axios.get('https://tan-colorful-snail.cyclic.app/getall/riwayat/')
+          .then((res) => {
+            this.data = res.data.results
+
+            })
+          .catch((err) => {
+            console.log(err)
           })
-        .catch((err) => {
-          console.log(err)
-        })
-    }
-    },
-    formatDate () {
-      const yyyy = dateToday.getFullYear()
-      let mm = dateToday.getMonth() + 1
-      let dd = dateToday.getDate()
-      if (dd < 10) dd = '0' + dd
-      if (mm < 10) mm = '0' + mm
-      return dd + '-' + mm + '-' + yyyy
+      },
+      async getFooter () {
+        await this.$axios.get('https://tan-colorful-snail.cyclic.app/getbykey/gejala/63d0e22627f1c35e7e36ee2f')
+          .then((res) => {
+            this.titlefooter = res.data.judul,
+            this.story = res.data.story,
+            this.gejala = res.data.gejala
+            })
+          .catch((err) => {
+            console.log(err)
+          })
+      },
+        async onSubmit(address){
+          try{
+            await this.$axios.post('https://tan-colorful-snail.cyclic.app/tamu', {
+              "name" : address
+            },{
+                    headers : {}})
+                    .then((res) => {
+                    console.log(res)
+                  }).catch((err)=> {
+                    console.log(err)
+                  })
+          } catch(err){
+          }
+
+        },
     }
   }
 </script>
