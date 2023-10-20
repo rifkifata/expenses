@@ -9,6 +9,12 @@ const routes: RouteRecordRaw[] = [
         path: '', component: () => import('pages/riwayat.vue')
       },
       {
+        path: '/kepu', component: () => import('pages/kepu-backup.vue')
+      },
+      {
+        path: '/tes', component: () => import('pages/untuktesting.vue')
+      },
+      {
         path: '/expenses', component: () => import('pages/IndexPage.vue')
       }
     ]
