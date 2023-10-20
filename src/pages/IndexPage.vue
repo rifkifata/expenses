@@ -70,6 +70,9 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
+import 'quasar-extras/animate/fadeIn.css';
+import 'quasar-extras/animate/fadeOut.css';
+import 'quasar-extras/animate';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -148,20 +151,7 @@ export default {
        pagination: {
         rowsPerPage: 0
       },
-      // carousel
-      // controlType: ref('outline'),
-      // controlTypeOptions: [
-      //   { value: 'regular', label: 'regular' },
-      //   { value: 'unelevated', label: 'unelevated' },
-      //   { value: 'flat', label: 'flat (default)' },
-      //   { value: 'outline', label: 'outline' },
-      //   { value: 'push', label: 'push' }
-      // ],
 
-      // slide: ref('style'),
-      // lorem: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque voluptatem totam, architecto cupiditate officia rerum, error dignissimos praesentium libero ab nemo.',
-      // Table
-      // separator: ref('none')
     }
   },
   beforeMount () {

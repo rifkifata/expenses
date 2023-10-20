@@ -6,7 +6,10 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       {
-        path: '', component: () => import('pages/riwayat.vue')
+        path: '', component: () => import('pages/short.vue')
+      },
+      {
+        path: '/riwayat', component: () => import('pages/riwayat.vue')
       },
       {
         path: '/kepu', component: () => import('pages/kepu-backup.vue')

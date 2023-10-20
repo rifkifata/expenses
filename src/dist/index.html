@@ -5,12 +5,16 @@
   <title>CodePen - Vue JS | Dynamic editable table ( with add, remove and editing row and cell )</title>
   <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/foundation/6.3.0/css/foundation.min.css'>
 <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Work+Sans:300,400,500,600,700'><link rel="stylesheet" href="./style.css">
+<link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"
+>
 
 </head>
 <body>
 <!-- partial:index.partial.html -->
 <div id="chartpanel" class="row" data-equalizer>
-  
+
   <div class="column small-12 left_panel" >
     <header data-equalizer-watch>
       <i class="fa fa-bars menu_top_icon" aria-hidden="true"></i>
@@ -21,8 +25,8 @@
       </div>
       <charttitle> </charttitle>
     </header>
-  
-  
+
+
   <div id="chart_table">
     <form id="chart_datas"  >
       <div class="grid-container">
@@ -48,12 +52,12 @@
             </label>
           </div>
         </div>
-        
+
          <div class="addRowBtn" v-on:click.prevent="addRow" value=""><i class="fa fa-plus" aria-hidden="true"></i></div>
-      </div>  
+      </div>
 
     </form>
-    
+
     <charttable v-bind:proplabels="labels"> </charttable>
   </div>
   </div> <!-- end left panel -->
