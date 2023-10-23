@@ -1,9 +1,10 @@
 <template>
   <div class="q-pa-md example-row-all-breakpoints">
+    <!-- <div class="q-gutter-y-md column" style="max-width: 1000px"> -->
     <div class="row items-center">
-      <div class="col-2">https:// </div>
+      <div class="col-2 q-mr-xs" align="right" >https:// </div>
       <div class="col-10">
-        <q-input outlined v-model="text" label="www.youtube.com" :dense="dense">
+        <q-input outlined v-model="text" placeholder="www.youtube.com" :dense="dense">
           <template v-slot:after>
             <q-icon name="close" @click="text = ''" class="cursor-pointer" />
           </template>
@@ -11,9 +12,9 @@
       </div>
     </div>
     <div class="row items-center">
-      <div class="col-2">teuku.my.id/</div>
+      <div class="col-2" align="right">teuku.my.id/</div>
       <div class="col-10">
-        <q-input outlined v-model="text" label="ikyganteng" :dense="dense">
+        <q-input outlined v-model="text" placeholder="ikyganteng" :dense="dense">
           <template v-slot:after>
             <q-icon name="close" @click="text = ''" class="cursor-pointer" />
           </template>
@@ -21,12 +22,15 @@
       </div>
     </div>
     <div class="row items-center">
-      <div class="col-2">
+      <div class="col-2" align="right">
           <!-- <q-btn round color="purple" icon="navigation" class="square" id="btnPost" /> -->
-          <img class="tombol" src="https://cdn.quasar.dev/logo-v2/svg/logo-dark.svg" alt="Quasar Logo" width="48" height="48">
+          <!-- <img class="tombol" src="https://cdn.quasar.dev/logo-v2/svg/logo-dark.svg" alt="Quasar Logo" width="48" height="48"> -->
+      <q-btn class="rotate-90" round color="purple" icon="navigation" onclick="this.style['WebkitTransform'] = 'rotate(' + 180 +'deg)';"/>
+
       </div>
-      <div class="col-10">
-        <q-input outlined v-model="text" hint="Made with Pride by Teuku Rifki Dhulul Fata" :dense="dense" readonly>
+<!-- hint="Made with Pride by Teuku Rifki Dhulul Fata" -->
+<div class="col-10">
+        <q-input outlined v-model="text"  :dense="dense" readonly>
         <template v-slot:after>
             <q-icon name="content_copy" @click="text = ''" class="cursor-pointer" />
           </template>
@@ -39,6 +43,7 @@
       <div class="col10"></div>
     </div>
   </div>
+  <!-- </div> -->
 
 
 
@@ -48,19 +53,6 @@
   .row > div
   .row + .row
     margin-top: 1rem
-
-#checkbox
-  display: yea
-
-.tombol
-  transform: rotate(0)
-  transition: transform .8s ease-in-out
-  transition-property: transform
-  transition-duration: 0.8s
-  transition-timing-function: ease-in-out
-  transition-delay: 0s
-
-
 </style>
 
 <script lang="ts">
