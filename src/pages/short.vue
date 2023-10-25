@@ -1,31 +1,36 @@
 <template>
   <div class="q-pa-md center-screen">
-    <div class="q-subheading">Made With 🖕 by <a href="https://instagram.com/rifkifata">Teuku</a>
-    </div>
-    <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
-      <q-input outlined v-model="sourcePath" for="txtSourcePath" placeholder="www.verylongendpoint.com/fuckyou" hint="Your Destination Path Here!" :dense="dense">
-        <template v-slot:after>
-          <q-icon name="close" @click="sourcePath = ''" class="cursor-pointer" />
-        </template>
-      </q-input>
-      <q-input outlined v-model="shortedPath" for="txtShortedPath" placeholder="fuckyou" hint="Will Be : teuku.my.id/fuckyou" :dense="dense">
-        <template v-slot:after>
-          <q-icon name="close" @click="shortedPath = ''" class="cursor-pointer" />
-        </template>
-      </q-input>
-      <q-input outlined v-model="author" for="txtAuthor"  label="By The Name Of" placeholder="Ikyganteng" hint="Not Required" :dense="dense">
-        <template v-slot:after>
-          <q-icon name="close" @click="author = ''" class="cursor-pointer" />
-        </template>
-      </q-input>
-      <q-btn class="arrow_downward" for="btnSend" round color="black" icon="arrow_downward" @click="posts()" />
-      <q-input outlined v-model="result" :dense="dense" readonly>
-        <template v-slot:after>
-          <q-icon for="txtResult" name="content_copy" @click="copyToClipBoard()" class="cursor-pointer" />
-          <!-- copied -->
-        </template>
-      </q-input>
-    </q-form>
+    <q-card class="my-card">
+      <q-card-section>
+        <div class="q-subheading" style="margin-bottom:30px;margin-right:25px">
+          <text-weight-bolder>Made With 🖕 by <a href="https://instagram.com/rifkifata">Teuku</a></text-weight-bolder>
+        </div>
+        <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
+          <q-input outlined v-model="sourcePath" for="txtSourcePath" placeholder="www.verylongendpoint.com/fuckyou" hint="Your Destination Path Here!" :dense="dense">
+            <template v-slot:after>
+              <q-icon name="close" @click="sourcePath = ''" class="cursor-pointer" />
+            </template>
+          </q-input>
+          <q-input outlined v-model="shortedPath" for="txtShortedPath" placeholder="fuckyou" hint="Will Be : teuku.my.id/fuckyou" :dense="dense">
+            <template v-slot:after>
+              <q-icon name="close" @click="shortedPath = ''" class="cursor-pointer" />
+            </template>
+          </q-input>
+          <q-input outlined v-model="author" for="txtAuthor" label="By The Name Of" placeholder="Ikyganteng" hint="Not Required" :dense="dense">
+            <template v-slot:after>
+              <q-icon name="close" @click="author = ''" class="cursor-pointer" />
+            </template>
+          </q-input>
+          <q-btn class="arrow_downward" for="btnSend" round color="black" icon="arrow_downward" @click="posts()" />
+          <q-input outlined v-model="result" :dense="dense" readonly>
+            <template v-slot:after>
+              <q-icon for="txtResult" name="content_copy" @click="copyToClipBoard()" class="cursor-pointer" />
+            </template>
+          </q-input>
+        </q-form>
+      </q-card-section>
+    </q-card>
+   
   </div>
 </template>
 <style>
@@ -36,6 +41,12 @@
     align-items: center;
     text-align: center;
     min-height: 100vh;
+  }
+  .my-card {
+    width: 100%;
+    max-width: 250px;
+    border: none;
+    border: 2px dotted black;
   }
 </style>
 
@@ -50,46 +61,20 @@ import { ref } from 'vue'
     getAnalytics
   } from "firebase/analytics";
   import 'animate.css';
+  import { matMenu } from '@quasar/extras/material-icons'
 
   export default {
     name: 'PageIndex',
     setup() {
       const $q = useQuasar()
-
-    const name = ref(null)
-    const age = ref(null)
-    const accept = ref(false)
-
     return {
-      name,
-      age,
-      accept,
-
-      onSubmit () {
-        if (accept.value !== true) {
-          $q.notify({
-            color: 'red-5',
-            textColor: 'white',
-            icon: 'warning',
-            message: 'You need to accept the license and terms first'
-          })
-        }
-        else {
-          $q.notify({
-            color: 'green-4',
-            textColor: 'white',
-            icon: 'cloud_done',
-            message: 'Submitted'
-          })
-        }
+      matMenu,
+      showNotif() {
+        $q.notify({
+          message: '🖕 Copied 🖕'
+        })
       },
-
-      onReset () {
-        name.value = null
-        age.value = null
-        accept.value = false
-      }
-    }
+     }
     },
     data() {
       return {
@@ -109,6 +94,7 @@ import { ref } from 'vue'
     methods: {
       async copyToClipBoard() {
         await navigator.clipboard.writeText(this.result);
+        this.showNotif();
       },
       async posts() {
         var validate = this.validate()
@@ -133,10 +119,9 @@ import { ref } from 'vue'
         var sourcePath = this.sourcePath
         var shortedPath = this.shortedPath
         var author = this.author
-        var element = document.getElementById('txtSourcePath');
         if (sourcePath == "" || shortedPath == "") {
-          animateCSS('#txtSourcePath', 'shakeX');
-          animateCSS('#txtShortedPath', 'shakeX');
+          sourcePath == "" ? animateCSS('#txtSourcePath', 'shakeX'):""
+          shortedPath == "" ? animateCSS('#txtShortedPath', 'shakeX'):""
           console.log("sourcePath or shortedPath Cannot Empty")
           return false
         }

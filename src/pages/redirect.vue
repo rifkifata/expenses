@@ -8,6 +8,7 @@
         <div id="element1" class="dot-carousel" />
       </div>
     </div>
+    <br />
     <div class="q-subheading">Made With {{emoji}} by <a href="https://instagram.com/rifkifata">Teuku</a></div>
   </div>
 </template>

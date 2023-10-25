@@ -1,7 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\src",
+    "\\src\\pages"
   ],
-  "SelectedNode": "\\.github",
+  "SelectedNode": "\\src\\assets",
   "PreviewInSolutionExplorer": false
 }
