@@ -6,7 +6,7 @@
           <text-weight-bolder>Made With 🖕 by <a href="https://instagram.com/rifkifata">Teuku</a></text-weight-bolder>
         </div>
         <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
-          <q-input outlined v-model="sourcePath" for="txtSourcePath" placeholder="www.verylongendpoint.com/fuckyou" hint="Your Destination Path Here!" :dense="dense">
+          <q-input outlined v-model="sourcePath" for="txtSourcePath" placeholder="www.longendpoint.com" hint="Your Destination Path Here!" :dense="dense">
             <template v-slot:after>
               <q-icon name="close" @click="sourcePath = ''" class="cursor-pointer" />
             </template>
@@ -21,10 +21,11 @@
               <q-icon name="close" @click="author = ''" class="cursor-pointer" />
             </template>
           </q-input>
-          <q-btn class="arrow_downward" for="btnSend" round color="black" icon="arrow_downward" @click="posts()" />
-          <q-input outlined v-model="result" :dense="dense" readonly>
+          <q-btn class="arrow_downward" for="btnSend" round color="black" icon="arrow_downward" @click="posts() " />
+          <!--<div><q-spinner-pie for="btnLoading" color="black" size="3em" style="display: none"/></div>-->
+          <q-input outlined v-model="result" for="txtResult" :dense="dense" readonly @click="redirect()">
             <template v-slot:after>
-              <q-icon for="txtResult" name="content_copy" @click="copyToClipBoard()" class="cursor-pointer" />
+              <q-icon name="content_copy" @click="copyToClipBoard()" class="cursor-pointer" />
             </template>
           </q-input>
         </q-form>
@@ -62,6 +63,7 @@ import { ref } from 'vue'
   } from "firebase/analytics";
   import 'animate.css';
   import { matMenu } from '@quasar/extras/material-icons'
+import { escapeLeadingUnderscores } from 'typescript';
 
   export default {
     name: 'PageIndex',
@@ -69,9 +71,9 @@ import { ref } from 'vue'
       const $q = useQuasar()
     return {
       matMenu,
-      showNotif() {
+      showNotif(msg) {
         $q.notify({
-          message: '🖕 Copied 🖕'
+          message: msg
         })
       },
      }
@@ -94,23 +96,40 @@ import { ref } from 'vue'
     methods: {
       async copyToClipBoard() {
         await navigator.clipboard.writeText(this.result);
-        this.showNotif();
+        this.showNotif('🖕 Copied 🖕');
       },
       async posts() {
+        const config = {
+          /*onUploadProgress: (progressEvent) => {
+            const totalLength = progressEvent.lengthComputable ? progressEvent.total : progressEvent.target.getResponseHeader('content-length') || progressEvent.target.getResponseHeader('x-decompressed-content-length');
+            document.getElementById("btnSend").style.display = "none";
+            if (totalLength !== null) {
+              //this.updateProgressBarValue(Math.round((progressEvent.loaded * 100) / totalLength));
+              document.getElementById("btnLoading").style.display = "block";
+            }
+          }*/
+        }
         var validate = this.validate()
-        if (validate == true){
+        if (validate == true) {
+          document.getElementById("txtResult").style.textDecoration = ""
+          this.result = "Wait a moment"
         await this.$axios.post('https://teuku.cyclic.app/short/', {
           "sourcePath": this.sourcePath,
           "shortedPath": this.shortedPath,
           "author": this.author
-        },{
-          headers: {}
         })
           .then((res) => {
+            document.getElementById("txtResult").style.textDecoration = "underline"
             this.result = "teuku.my.id/" + res.data.props.shortedPath
           }).catch((err) => {
             console.log(err.response.data)
-            this.result = err.response.data.message
+            if (err.response.data.message) {
+              this.showNotif('🖕 ' + err.response.data.message + ' 🖕');
+              this.result = ""
+            } else {
+              this.showNotif('🖕 Be Patient & Try Again 🖕');
+              this.result = ""
+            }
           })
         }
 
@@ -123,10 +142,17 @@ import { ref } from 'vue'
           sourcePath == "" ? animateCSS('#txtSourcePath', 'shakeX'):""
           shortedPath == "" ? animateCSS('#txtShortedPath', 'shakeX'):""
           console.log("sourcePath or shortedPath Cannot Empty")
+          
           return false
         }
         animateCSS('.arrow_downward', 'shakeY');
         return true
+      },
+      redirect() {
+        var result = this.result;
+        if (result.length > 0) {
+          window.location.replace("https://" + result)
+        }
       }
     }
   }

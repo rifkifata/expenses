@@ -98,6 +98,17 @@
             console.log(res.data.sourcePath);
             await delay(5000);
             window.location.replace(res.data.sourcePath);
+
+            //if 200 but no route handler found
+            /*
+            if (res.data.msg == "no route handler found") {
+              console.log(err)
+              await delay(5000);
+              document.getElementById("element1").style.display = "none";
+              document.getElementById("coloumn1").style.display = "block";
+              this.sourcePath = "404 Not Found"
+              this.emoji = "🖕"
+            }*/
           })
           .catch(async (err) => {
             console.log(err)
