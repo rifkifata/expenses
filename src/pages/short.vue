@@ -6,7 +6,7 @@
           <text-weight-bolder>As a normal <br><b>ShortLink Generator</b></text-weight-bolder>
         </div>
         <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
-          <q-input outlined v-model="sourcePath" for="txtSourcePath" placeholder="www.longurl.com/url" hint="Your Destination Path Here!" :dense="dense">
+          <q-input outlined v-model="sourcePath" for="txtSourcePath" placeholder="www.longurl.com/subdir" hint="Your Destination Path Here!" :dense="dense">
             <template v-slot:after>
               <q-icon name="close" @click="sourcePath = ''" class="cursor-pointer" />
             </template>
