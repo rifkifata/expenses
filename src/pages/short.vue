@@ -102,16 +102,6 @@ import { escapeLeadingUnderscores } from 'typescript';
         this.showNotif('🖕 Copied 🖕');
       },
       async posts() {
-        const config = {
-          /*onUploadProgress: (progressEvent) => {
-            const totalLength = progressEvent.lengthComputable ? progressEvent.total : progressEvent.target.getResponseHeader('content-length') || progressEvent.target.getResponseHeader('x-decompressed-content-length');
-            document.getElementById("btnSend").style.display = "none";
-            if (totalLength !== null) {
-              //this.updateProgressBarValue(Math.round((progressEvent.loaded * 100) / totalLength));
-              document.getElementById("btnLoading").style.display = "block";
-            }
-          }*/
-        }
         var validate = this.validate()
         if (validate == true) {
           document.getElementById("txtResult").style.textDecoration = ""
@@ -149,6 +139,13 @@ import { escapeLeadingUnderscores } from 'typescript';
 
           return false
         }
+        if( /[^a-zA-Z0-9\-\/]*$/.test( shortedPath ) ) {
+            this.showNotif('🖕 Special Character not Allowed 🖕');
+            animateCSS('#txtShortedPath', 'shakeX')
+            console.log("Special Char not Allowed")
+
+            return false;
+        }
         animateCSS('.arrow_downward', 'shakeY');
         return true
       },
@@ -158,6 +155,7 @@ import { escapeLeadingUnderscores } from 'typescript';
           window.location.assign("https://" + result)
         }
       }
+
     }
   }
   const animateCSS = (element, animation, prefix = 'animate__') =>
