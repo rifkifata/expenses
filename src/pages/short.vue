@@ -3,10 +3,10 @@
     <q-card class="my-card">
       <q-card-section>
         <div class="q-subheading" style="margin-right:25px;margin-bottom:30px">
-          <text-weight-bolder>As a normal <br><b>ShortLink Generator</b></text-weight-bolder>
+          <text-weight-bolder>Just an Abnormal<br><b>ShortLink Generator</b></text-weight-bolder>
         </div>
         <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
-          <q-input outlined v-model="sourcePath" for="txtSourcePath" placeholder="www.longurl.com/subdir" hint="Your Destination Path Here!" :dense="dense">
+          <q-input outlined v-model="sourcePath" for="txtSourcePath" placeholder="www.longurl.com/url" hint="Your Destination Path Here!" :dense="dense">
             <template v-slot:after>
               <q-icon name="close" @click="sourcePath = ''" class="cursor-pointer" />
             </template>
@@ -45,10 +45,12 @@
     align-items: center;
     text-align: center;
     min-height: 100vh;
+    width: 100%;
   }
   .my-card {
-    width: 100%;
-    max-width: 250px;
+    width:100vh;
+    min-width : 50vh;
+    max-width: 100%;
     border: none;
     border: 2px dotted black;
   }
@@ -139,13 +141,15 @@ import { escapeLeadingUnderscores } from 'typescript';
 
           return false
         }
-        if( /[^a-zA-Z0-9\-\/]*$/.test( shortedPath ) ) {
-            this.showNotif('🖕 Special Character not Allowed 🖕');
-            animateCSS('#txtShortedPath', 'shakeX')
-            console.log("Special Char not Allowed")
 
-            return false;
-        }
+      if( /[^a-zA-Z0-9\-\/]/.test( shortedPath ) ) {
+          alert('Input is not alphanumeric');
+          return false;
+      }
+
+
+    return true;
+
         animateCSS('.arrow_downward', 'shakeY');
         return true
       },
