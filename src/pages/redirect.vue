@@ -97,7 +97,7 @@
 
             console.log(res.data.sourcePath);
             await delay(5000);
-            window.location.replace(res.data.sourcePath);
+            window.location.assign(res.data.sourcePath);
 
             //if 200 but no route handler found
             /*

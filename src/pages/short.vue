@@ -2,11 +2,11 @@
   <div class="q-pa-md center-screen">
     <q-card class="my-card">
       <q-card-section>
-        <div class="q-subheading" style="margin-bottom:30px;margin-right:25px">
-          <text-weight-bolder>Made With 🖕 by <a href="https://instagram.com/rifkifata">Teuku</a></text-weight-bolder>
+        <div class="q-subheading" style="margin-right:25px;margin-bottom:30px">
+          <text-weight-bolder>As a normal <br><b>ShortLink Generator</b></text-weight-bolder>
         </div>
         <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
-          <q-input outlined v-model="sourcePath" for="txtSourcePath" placeholder="www.longendpoint.com" hint="Your Destination Path Here!" :dense="dense">
+          <q-input outlined v-model="sourcePath" for="txtSourcePath" placeholder="www.longurl.com/url" hint="Your Destination Path Here!" :dense="dense">
             <template v-slot:after>
               <q-icon name="close" @click="sourcePath = ''" class="cursor-pointer" />
             </template>
@@ -28,11 +28,14 @@
               <q-icon name="content_copy" @click="copyToClipBoard()" class="cursor-pointer" />
             </template>
           </q-input>
+        <div class="q-subheading" style="margin-right:25px">
+          <text-weight-bolder>Made With 🖕 by <a href="https://instagram.com/rifkifata">Teuku</a></text-weight-bolder>
+        </div>
         </q-form>
       </q-card-section>
     </q-card>
-   
   </div>
+  <!-- Disable Special Character -->
 </template>
 <style>
 .center-screen {
@@ -121,6 +124,7 @@ import { escapeLeadingUnderscores } from 'typescript';
           .then((res) => {
             document.getElementById("txtResult").style.textDecoration = "underline"
             this.result = "teuku.my.id/" + res.data.props.shortedPath
+            this.result = this.result.replaceAll(" ","%20")
           }).catch((err) => {
             console.log(err.response.data)
             if (err.response.data.message) {
@@ -142,7 +146,7 @@ import { escapeLeadingUnderscores } from 'typescript';
           sourcePath == "" ? animateCSS('#txtSourcePath', 'shakeX'):""
           shortedPath == "" ? animateCSS('#txtShortedPath', 'shakeX'):""
           console.log("sourcePath or shortedPath Cannot Empty")
-          
+
           return false
         }
         animateCSS('.arrow_downward', 'shakeY');
@@ -151,7 +155,7 @@ import { escapeLeadingUnderscores } from 'typescript';
       redirect() {
         var result = this.result;
         if (result.length > 0) {
-          window.location.replace("https://" + result)
+          window.location.assign("https://" + result)
         }
       }
     }
