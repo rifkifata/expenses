@@ -97,7 +97,7 @@ import { ref } from 'vue'
 let dateToday = new Date ()
 function getTheDate(getDate) {
             var days = ["Sun", "Mon", "Tue",
-              "Wed", "Thu", "Fri", "Sat"
+              "Wed", "Thu", "Fri", "KIAMAT"
             ];
             var months = ["January", "February", "March",
               "April", "May", "June", "July", "August",
