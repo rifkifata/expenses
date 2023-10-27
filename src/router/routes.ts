@@ -8,7 +8,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: '', component: () => import('pages/short.vue')
       }
-      /*{
+      /* {
         path: '/riwayat', component: () => import('pages/riwayat.vue')
       },
       {
@@ -19,7 +19,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: '/expenses', component: () => import('pages/IndexPage.vue')
-      }*/
+      } */
     ]
   },
 
