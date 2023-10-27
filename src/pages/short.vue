@@ -91,7 +91,7 @@
   .my-card {
     width: 100vh;
     min-width: 50vh;
-    max-width: 100%;
+    max-width: 90%;
     border: none;
     border: 2px dotted black;
   }
