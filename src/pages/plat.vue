@@ -3,79 +3,30 @@
     <q-card class="my-card">
       <q-card-section>
         <div class="q-subheading"
-             style="margin-right: 25px; margin-bottom: 30px">
-          <text-weight-bolder>
-            Just an Abnormal<br /><b>ShortLink Generator</b>
-          </text-weight-bolder>
+             style="margin-bottom: 30px; color:white;">
+          <text-weight-bolder><b>Cek Lokasi Plat Kendaraan</b></text-weight-bolder>
         </div>
-        <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
-          <q-input outlined
-                   v-model="sourcePath"
-                   for="txtSourcePath"
-                   placeholder="www.longurl.com/url"
-                   hint="Your Destination Path Here!"
-                   :dense="dense">
-            <template v-slot:after>
-              <q-icon name="close"
-                      @click="sourcePath = ''"
-                      class="cursor-pointer" />
-            </template>
-          </q-input>
-          <q-input outlined
-                   v-model="shortedPath"
-                   for="txtShortedPath"
-                   placeholder="fuckyou"
-                   hint="Will Be : teuku.my.id/fuckyou"
-                   :dense="dense">
-            <template v-slot:after>
-              <q-icon name="close"
-                      @click="shortedPath = ''"
-                      class="cursor-pointer" />
-            </template>
-          </q-input>
-          <q-input outlined
-                   v-model="author"
-                   for="txtAuthor"
-                   label="By The Name Of"
-                   placeholder="Ikyganteng"
-                   hint="Not Required"
-                   :dense="dense">
-            <template v-slot:after>
-              <q-icon name="close"
-                      @click="author = ''"
-                      class="cursor-pointer" />
-            </template>
-          </q-input>
-          <q-btn class="arrow_downward"
-                 for="btnSend"
-                 round
-                 color="black"
-                 icon="arrow_downward"
-                 @click="posts() " />
-          <!--<div><q-spinner-pie for="btnLoading" color="black" size="3em" style="display: none"/></div>-->
-          <q-input outlined
-                   v-model="result"
-                   for="txtResult"
-                   :dense="dense"
-                   readonly
-                   @click="redirect()">
-            <template v-slot:after>
-              <q-icon name="content_copy"
-                      @click="copyToClipBoard()"
-                      class="cursor-pointer" />
-            </template>
-          </q-input>
-          <div class="q-subheading" style="margin-right: 25px">
-            <text-weight-bolder>
-              Made With 🖕 by
-              <a href="https://instagram.com/rifkifata">Teuku</a>
-            </text-weight-bolder>
-          </div>
+        <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md row justify-between">
+        <q-input color="white" dark v-model="txtAreaCode" :dense="dense" style="width:100vh;max-width:20%;font-size:50px" input-style="text-align: center"/>
+        <q-input color="white" dark v-model="txtNumber" :dense="dense" style="width:100vh;max-width:40%;font-size:50px" input-style="text-align: center"/>
+        <q-input color="white" dark v-model="txtSubAreaCode" :dense="dense" style="width:100vh;max-width:20%;font-size:50px" input-style="text-align: center"/>
         </q-form>
       </q-card-section>
+      <p style="color:white;background-color:grey;margin-top:5px;font-size:20px">23 · 30</p>
     </q-card>
   </div>
-  <!-- Disable Special Character -->
+
+  <div class="q-pa-md">
+    <q-table
+      flat bordered
+      title="Treats"
+      :rows="rows"
+      :columns="columns"
+      row-key="name"
+      dark
+      color="amber"
+    />
+  </div>
 </template>
 <style>
   .center-screen {
@@ -84,19 +35,127 @@
     justify-content: center;
     align-items: center;
     text-align: center;
-    min-height: 100vh;
     width: 100%;
+    background-color : #5E5E5E;
   }
 
   .my-card {
     width: 100vh;
-    max-width: 90%;
-    border: none;
-    border: 2px dotted black;
+    max-width: 95%;
+    border-style:inset;
+    background-color:#000000;
   }
 </style>
 
 <script lang="ts">
+const columns = [
+  { name: 'subAreaCode', label: 'Calcium (%)', field: 'calcium', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) },
+  { name: 'subAreaName', label: 'Iron (%)', field: 'iron', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) }
+]
+
+const rows = [
+  {
+    name: 'Frozen Yogurt',
+    calories: 159,
+    fat: 6.0,
+    carbs: 24,
+    protein: 4.0,
+    sodium: 87,
+    calcium: '14%',
+    iron: '1%'
+  },
+  {
+    name: 'Ice cream sandwich',
+    calories: 237,
+    fat: 9.0,
+    carbs: 37,
+    protein: 4.3,
+    sodium: 129,
+    calcium: '8%',
+    iron: '1%'
+  },
+  {
+    name: 'Eclair',
+    calories: 262,
+    fat: 16.0,
+    carbs: 23,
+    protein: 6.0,
+    sodium: 337,
+    calcium: '6%',
+    iron: '7%'
+  },
+  {
+    name: 'Cupcake',
+    calories: 305,
+    fat: 3.7,
+    carbs: 67,
+    protein: 4.3,
+    sodium: 413,
+    calcium: '3%',
+    iron: '8%'
+  },
+  {
+    name: 'Gingerbread',
+    calories: 356,
+    fat: 16.0,
+    carbs: 49,
+    protein: 3.9,
+    sodium: 327,
+    calcium: '7%',
+    iron: '16%'
+  },
+  {
+    name: 'Jelly bean',
+    calories: 375,
+    fat: 0.0,
+    carbs: 94,
+    protein: 0.0,
+    sodium: 50,
+    calcium: '0%',
+    iron: '0%'
+  },
+  {
+    name: 'Lollipop',
+    calories: 392,
+    fat: 0.2,
+    carbs: 98,
+    protein: 0,
+    sodium: 38,
+    calcium: '0%',
+    iron: '2%'
+  },
+  {
+    name: 'Honeycomb',
+    calories: 408,
+    fat: 3.2,
+    carbs: 87,
+    protein: 6.5,
+    sodium: 562,
+    calcium: '0%',
+    iron: '45%'
+  },
+  {
+    name: 'Donut',
+    calories: 452,
+    fat: 25.0,
+    carbs: 51,
+    protein: 4.9,
+    sodium: 326,
+    calcium: '2%',
+    iron: '22%'
+  },
+  {
+    name: 'KitKat',
+    calories: 518,
+    fat: 26.0,
+    carbs: 65,
+    protein: 7,
+    sodium: 54,
+    calcium: '12%',
+    iron: '6%'
+  }
+]
+
   import { useQuasar } from 'quasar'
   import { ref } from 'vue'
   // Import the functions you need from the SDKs you need
@@ -115,6 +174,11 @@
     setup() {
       const $q = useQuasar()
       return {
+         columns,
+      rows,
+        txtAreaCode: ref('T'),
+        txtNumber: ref('4899'),
+        txtSubAreaCode: ref('IKY'),
         matMenu,
         showNotif(msg) {
           $q.notify({

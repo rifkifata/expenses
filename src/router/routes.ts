@@ -7,8 +7,12 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: '', component: () => import('pages/short.vue')
+      },
+      {
+        path: '/cek-lokasi-plat-kendaraan', component: () => import('pages/plat.vue')
       }
-      /* {
+      /*
+      {
         path: '/riwayat', component: () => import('pages/riwayat.vue')
       },
       {
