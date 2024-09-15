@@ -10,6 +10,9 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: '/cek-lokasi-plat-kendaraan', component: () => import('pages/plat.vue')
+      },
+      {
+        path: '/mfee', component: () => import('pages/mfee.vue')
       }
       /*
       {

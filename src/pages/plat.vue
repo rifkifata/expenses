@@ -2,284 +2,315 @@
   <div class="q-pa-md center-screen">
     <q-card class="my-card">
       <q-card-section>
-        <div class="q-subheading"
-             style="margin-bottom: 30px; color:white;">
-          <text-weight-bolder><b>Cek Lokasi Plat Kendaraan</b></text-weight-bolder>
+        <div class="q-subheading" style="margin-bottom: 20px; color: white">
+          <text-weight-bolder
+            ><b>Cek Lokasi Plat Motor dan Mobil</b></text-weight-bolder
+          >
         </div>
-        <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md row justify-between">
-        <q-input color="white" dark v-model="txtAreaCode" :dense="dense" style="width:100vh;max-width:20%;font-size:50px" input-style="text-align: center"/>
-        <q-input color="white" dark v-model="txtNumber" :dense="dense" style="width:100vh;max-width:40%;font-size:50px" input-style="text-align: center"/>
-        <q-input color="white" dark v-model="txtSubAreaCode" :dense="dense" style="width:100vh;max-width:20%;font-size:50px" input-style="text-align: center"/>
+        <q-form class="q-gutter-md row justify-between">
+          <q-input
+            class="uppercase"
+            color="white"
+            dark
+            v-model="areaCode"
+            for="txtAreaCode"
+            style="width: 100vh; max-width: 20%; font-size: 40px"
+            input-style="text-align: center"
+            maxlength="2"
+            @keydown="filterKeyAlphabetOnly"
+            @click="activeButton()"
+          />
+          <q-input
+            color="white"
+            dark
+            v-model="numberOnly"
+            for="txtNumber"
+            style="width: 100vh; max-width: 40%; font-size: 40px"
+            input-style="text-align: center"
+            maxlength="4"
+            onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+            @click="activeButton()"
+          />
+          <q-input
+            class="uppercase"
+            color="white"
+            dark
+            v-model="subAreaCode"
+            for="txtSubAreaCode"
+            style="width: 100vh; max-width: 20%; font-size: 40px"
+            input-style="text-align: center"
+            maxlength="3"
+            @keydown="filterKeyAlphabetOnly"
+            @click="activeButton()"
+          />
         </q-form>
       </q-card-section>
-      <p style="color:white;background-color:grey;margin-top:5px;font-size:20px">23 · 30</p>
+      <p
+        style="
+          color: white;
+          background-color: grey;
+          margin-top: 5px;
+          font-size: 20px;
+        "
+      >
+        {{ txtResult }}
+      </p>
     </q-card>
-  </div>
 
-  <div class="q-pa-md">
-    <q-table
-      flat bordered
-      title="Treats"
-      :rows="rows"
-      :columns="columns"
-      row-key="name"
-      dark
-      color="amber"
+    <q-btn
+      class="directions_car"
+      id="btnGet"
+      ref="myBTN"
+      round
+      color="black"
+      :icon="icons"
+      style="margin-top: 10px"
+      size="18px"
+      @click="getByKey()"
     />
   </div>
+
+  <q-dialog v-model="icon">
+    <q-card style="">
+      <q-card-section
+        class="row items-center q-pb-none"
+        style="width: 100vh; max-width: 100%; padding: 0px"
+      >
+        <q-space />
+        <q-btn icon="close" flat round dense v-close-popup />
+      </q-card-section>
+      <q-table
+        style="height: 400px; max-width: 100%"
+        flat
+        bordered
+        :title="title"
+        :rows="rows"
+        :columns="columns"
+        row-key="name"
+        dark
+        color="amber"
+        virtual-scroll
+        :virtual-scroll-item-size="48"
+        :virtual-scroll-sticky-size-start="48"
+        :pagination="pagination"
+        :rows-per-page-options="[0]"
+        @virtual-scroll="onScroll"
+        hide-bottom
+      />
+    </q-card>
+  </q-dialog>
 </template>
 <style>
-  .center-screen {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    width: 100%;
-    background-color : #5E5E5E;
-  }
+.uppercase input {
+  text-transform: uppercase;
+}
 
-  .my-card {
-    width: 100vh;
-    max-width: 95%;
-    border-style:inset;
-    background-color:#000000;
-  }
+.center-screen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-height: 100vh;
+  width: 100%;
+  background-color: #5e5e5e;
+}
+
+.my-card {
+  width: 100vh;
+  max-width: 95%;
+  border-style: inset;
+  background-color: #000000;
+}
 </style>
 
 <script lang="ts">
-const columns = [
-  { name: 'subAreaCode', label: 'Calcium (%)', field: 'calcium', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) },
-  { name: 'subAreaName', label: 'Iron (%)', field: 'iron', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) }
-]
+const title = "";
+const columns = [];
+const rows = [];
 
-const rows = [
-  {
-    name: 'Frozen Yogurt',
-    calories: 159,
-    fat: 6.0,
-    carbs: 24,
-    protein: 4.0,
-    sodium: 87,
-    calcium: '14%',
-    iron: '1%'
-  },
-  {
-    name: 'Ice cream sandwich',
-    calories: 237,
-    fat: 9.0,
-    carbs: 37,
-    protein: 4.3,
-    sodium: 129,
-    calcium: '8%',
-    iron: '1%'
-  },
-  {
-    name: 'Eclair',
-    calories: 262,
-    fat: 16.0,
-    carbs: 23,
-    protein: 6.0,
-    sodium: 337,
-    calcium: '6%',
-    iron: '7%'
-  },
-  {
-    name: 'Cupcake',
-    calories: 305,
-    fat: 3.7,
-    carbs: 67,
-    protein: 4.3,
-    sodium: 413,
-    calcium: '3%',
-    iron: '8%'
-  },
-  {
-    name: 'Gingerbread',
-    calories: 356,
-    fat: 16.0,
-    carbs: 49,
-    protein: 3.9,
-    sodium: 327,
-    calcium: '7%',
-    iron: '16%'
-  },
-  {
-    name: 'Jelly bean',
-    calories: 375,
-    fat: 0.0,
-    carbs: 94,
-    protein: 0.0,
-    sodium: 50,
-    calcium: '0%',
-    iron: '0%'
-  },
-  {
-    name: 'Lollipop',
-    calories: 392,
-    fat: 0.2,
-    carbs: 98,
-    protein: 0,
-    sodium: 38,
-    calcium: '0%',
-    iron: '2%'
-  },
-  {
-    name: 'Honeycomb',
-    calories: 408,
-    fat: 3.2,
-    carbs: 87,
-    protein: 6.5,
-    sodium: 562,
-    calcium: '0%',
-    iron: '45%'
-  },
-  {
-    name: 'Donut',
-    calories: 452,
-    fat: 25.0,
-    carbs: 51,
-    protein: 4.9,
-    sodium: 326,
-    calcium: '2%',
-    iron: '22%'
-  },
-  {
-    name: 'KitKat',
-    calories: 518,
-    fat: 26.0,
-    carbs: 65,
-    protein: 7,
-    sodium: 54,
-    calcium: '12%',
-    iron: '6%'
-  }
-]
+import { useQuasar } from "quasar";
+import { ref } from "vue";
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import "animate.css";
+import { matMenu } from "@quasar/extras/material-icons";
+import { escapeLeadingUnderscores } from "typescript";
 
-  import { useQuasar } from 'quasar'
-  import { ref } from 'vue'
-  // Import the functions you need from the SDKs you need
-  import {
-    initializeApp
-  } from "firebase/app";
-  import {
-    getAnalytics
-  } from "firebase/analytics";
-  import 'animate.css';
-  import { matMenu } from '@quasar/extras/material-icons'
-  import { escapeLeadingUnderscores } from 'typescript';
-
-  export default {
-    name: 'PageIndex',
-    setup() {
-      const $q = useQuasar()
-      return {
-         columns,
-      rows,
-        txtAreaCode: ref('T'),
-        txtNumber: ref('4899'),
-        txtSubAreaCode: ref('IKY'),
-        matMenu,
-        showNotif(msg) {
-          $q.notify({
-            message: msg
-          })
+export default {
+  name: "PageIndex",
+  setup() {
+    const $q = useQuasar();
+    return {
+      //txtAreaCode: ref('T'),
+      //txtNumber: ref('4899'),
+      //txtSubAreaCode: ref('IKY'),
+      //txtResult: ref("Loading..."),
+      // icons: ref("directions_car"),
+      matMenu,
+      showNotif(msg) {
+        $q.notify({
+          message: msg,
+        });
+      },
+    };
+  },
+  data() {
+    return {
+      title: "",
+      icons: "directions_car",
+      columns: [
+        {
+          name: "subAreaCode",
+          label: "Kode",
+          field: "subAreaCode",
+          sortable: true,
+          sort: (a, b) => parseInt(a, 10) - parseInt(b, 10),
+          align: "center",
         },
+        {
+          name: "subAreaName",
+          label: "Wilayah",
+          field: "subAreaName",
+          sortable: true,
+          sort: (a, b) => parseInt(a, 10) - parseInt(b, 10),
+          align: "center",
+        },
+      ],
+      rows: [],
+      result: "",
+      ph: "",
+      show: false,
+      areaCode: "B",
+      numberOnly: "0",
+      subAreaCode: "S",
+      author: null,
+      icon: false,
+      bar: false,
+      bar2: false,
+      toolbar: false,
+      txtResult: "asd",
+      n: false,
+      icon: false,
+    };
+  },
+  beforeMount() {},
+  mounted() {
+    this.getTime();
+  },
+  created() {},
+  methods: {
+    async getByKey() {
+      //call switch function
+      //this.switch();
+      if (this.n === false) {
+        this.txtResult = "Loading ... ";
+      }
+
+      const body = {
+        areaCode: this.areaCode,
+        subAreaCode: this.subAreaCode,
+      };
+      await this.$axios
+        .post("https://cek-lokasi-plat-motor-mobil.vercel.app/plat", body)
+        .then((res) => {
+          this.title = res.data.areaName;
+          this.rows = res.data.subAreaArr;
+          this.txtResult = res.data.areaName + " - " + res.data.subAreaName;
+          if (this.n === false) {
+            //activate expand button
+            this.icons = "expand";
+            this.n = true;
+          } else {
+            this.icons = "directions_car";
+            this.n = false;
+            this.icon = true;
+          }
+        })
+        .catch((err) => {
+          console.log(err.response.data);
+          this.txtResult = err.response.data.msg;
+        });
+    },
+    filterKeyAlphabetOnly(e) {
+      const key = e.key;
+      if (/^[a-zA-Z]*$/.test(key) === false) return e.preventDefault();
+    },
+    filterKeyNumberOnly(e) {
+      const key = e.key;
+      console.log(key);
+      // if (/^[0-9]*$/.test(key) === false) return e.preventDefault();
+      // if (key !== "e") return e.preventDefault();
+      // e.target.value = e.target.value.replace(/[^0-9]+/g, "");
+    },
+    filterKey(e) {
+      const key = e.key;
+      console.log(e);
+      // if (/[0-9]/.test(key) === false) return e.preventDefault();
+    },
+    activeButton() {
+      this.icons = "directions_car";
+      this.n = false;
+    },
+    getTime() {
+      let a;
+      let time;
+      //setInterval(() => {
+      a = new Date();
+      time = a.getHours() + ":" + String(a.getMinutes()).padStart(2, "0");
+      //+ ":" +
+      //a.getTime();
+      this.txtResult = time;
+      //}, 1000);
+    },
+
+    validate() {
+      var sourcePath = this.sourcePath;
+      var shortedPath = this.shortedPath;
+      var author = this.author;
+      if (sourcePath == "" || shortedPath == "") {
+        sourcePath == "" ? animateCSS("#txtSourcePath", "shakeX") : "";
+        shortedPath == "" ? animateCSS("#txtShortedPath", "shakeX") : "";
+        console.log("sourcePath or shortedPath Cannot Empty");
+
+        return false;
+      }
+
+      if (/[^a-zA-Z0-9\-\/]/.test(shortedPath)) {
+        alert("Input is not alphanumeric");
+        return false;
+      }
+      animateCSS(".arrow_downward", "shakeY");
+      return true;
+    },
+    redirect() {
+      var result = this.result;
+      if (result.length > 0) {
+        window.location.assign("https://" + result);
       }
     },
-    data() {
-      return {
-        result: '',
-        ph: '',
-        dense: true,
-        show: false,
+  },
 
-        sourcePath: "",
-        shortedPath: "",
-        author: null
-      }
-    },
-    beforeMount() { },
-    mounted() { },
-    created() { },
-    methods: {
-      async copyToClipBoard() {
-        await navigator.clipboard.writeText(this.result);
-        this.showNotif('🖕 Copied 🖕');
-      },
-      async posts() {
-        var validate = this.validate()
-        const body = {
-          "sourcePath": this.sourcePath,
-          "shortedPath": this.shortedPath,
-          "author": this.author
-        }
-        if (validate == true) {
-          document.getElementById("txtResult").style.textDecoration = ""
-          this.result = "Wait a moment"
+  //getTime
 
-          await this.$axios.post('https://teuku.cyclic.app/short/', body)
-            .then((res) => {
-              document.getElementById("txtResult").style.textDecoration = "underline"
-              this.result = "teuku.my.id/" + res.data.props.shortedPath
-              this.result = this.result.replaceAll(" ", "%20")
-            }).catch((err) => {
-              console.log(err.response.data)
-              if (err.response.data.message) {
-                this.showNotif('🖕 ' + err.response.data.message + ' 🖕');
-                this.result = ""
-              } else {
-                console.log(err)
-                this.showNotif('🖕 Be Patient & Try Again 🖕');
-                this.result = ""
-              }
-            })
-        }
+  //
+};
+const animateCSS = (element, animation, prefix = "animate__") =>
+  // We create a Promise and return it
+  new Promise((resolve, reject) => {
+    const animationName = `${prefix}${animation}`;
+    const node = document.querySelector(element);
 
-      },
-      validate() {
-        var sourcePath = this.sourcePath
-        var shortedPath = this.shortedPath
-        var author = this.author
-        if (sourcePath == "" || shortedPath == "") {
-          sourcePath == "" ? animateCSS('#txtSourcePath', 'shakeX') : ""
-          shortedPath == "" ? animateCSS('#txtShortedPath', 'shakeX') : ""
-          console.log("sourcePath or shortedPath Cannot Empty")
+    node.classList.add(`${prefix}animated`, animationName);
 
-          return false
-        }
-
-        if (/[^a-zA-Z0-9\-\/]/.test(shortedPath)) {
-          alert('Input is not alphanumeric');
-          return false;
-        }
-        animateCSS('.arrow_downward', 'shakeY');
-        return true
-      },
-      redirect() {
-        var result = this.result;
-        if (result.length > 0) {
-          window.location.assign("https://" + result)
-        }
-      }
-
+    // When the animation ends, we clean the classes and resolve the Promise
+    function handleAnimationEnd(event) {
+      event.stopPropagation();
+      node.classList.remove(`${prefix}animated`, animationName);
+      resolve("Animation ended");
     }
-  }
-  const animateCSS = (element, animation, prefix = 'animate__') =>
-    // We create a Promise and return it
-    new Promise((resolve, reject) => {
-      const animationName = `${prefix}${animation}`;
-      const node = document.querySelector(element);
 
-      node.classList.add(`${prefix}animated`, animationName);
-
-      // When the animation ends, we clean the classes and resolve the Promise
-      function handleAnimationEnd(event) {
-        event.stopPropagation();
-        node.classList.remove(`${prefix}animated`, animationName);
-        resolve('Animation ended');
-      }
-
-      node.addEventListener('animationend', handleAnimationEnd, { once: true });
-    });
+    node.addEventListener("animationend", handleAnimationEnd, { once: true });
+  });
 </script>
